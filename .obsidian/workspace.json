@@ -1,0 +1,219 @@
+{
+  "main": {
+    "id": "31246ed80767b366",
+    "type": "split",
+    "children": [
+      {
+        "id": "f87f8db04f420540",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "fa5d6864ab25ea69",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Obsidian牛掰却让新手头疼的笔记软件，这教程给你喂到嘴边，不会你找我退币.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "1a2a9ee4e067d836",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "测试git.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          }
+        ],
+        "currentTab": 1
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "827040e417a9b40d",
+    "type": "split",
+    "children": [
+      {
+        "id": "3ae38d8642eba465",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "35ce7a43408c94b1",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "b0fe3662c10e9007",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "66943d0bba2d82bf",
+            "type": "leaf",
+            "state": {
+              "type": "file-tree-view",
+              "state": {}
+            }
+          }
+        ]
+      },
+      {
+        "id": "f90435f9bc18ab55",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "1d270a4213453cee",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          },
+          {
+            "id": "e3d8856f2514ef88",
+            "type": "leaf",
+            "state": {
+              "type": "recent-files",
+              "state": {}
+            }
+          }
+        ],
+        "currentTab": 1
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "06b1589f5663eee2",
+    "type": "split",
+    "children": [
+      {
+        "id": "8795c91bc4834d12",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a178a1dc1370001d",
+            "type": "leaf",
+            "state": {
+              "type": "calendar",
+              "state": {}
+            }
+          },
+          {
+            "id": "aa710a5748244268",
+            "type": "leaf",
+            "state": {
+              "type": "todo",
+              "state": {}
+            }
+          },
+          {
+            "id": "e6129e661ee2d904",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "测试git.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "3e9498aaca6c87ec",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "测试git.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": "18dd156d0e26d639",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "f04ed4ae6592f853",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "f9e2a6c13fab74a2",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "测试git.md"
+              }
+            }
+          }
+        ],
+        "currentTab": 1
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:打开快速切换": false,
+      "graph:查看关系图谱": false,
+      "canvas:新建白板": false,
+      "daily-notes:打开/创建今天的日记": false,
+      "templates:插入模板": false,
+      "command-palette:打开命令面板": false,
+      "flomo-importer:Flomo Importer": false,
+      "obsidian-memos:Memos": false,
+      "templater-obsidian:Templater": false,
+      "file-tree-alternative:File Tree Alternative Plugin": false,
+      "custom-sort:Toggle custom sorting": false
+    }
+  },
+  "active": "1a2a9ee4e067d836",
+  "lastOpenFiles": [
+    "Obsidian牛掰却让新手头疼的笔记软件，这教程给你喂到嘴边，不会你找我退币.md",
+    "测试git.md",
+    "Obsidian牛掰却让新手头疼的笔记软件，这教程给你喂到嘴边，不会你找我退币.pdf",
+    "sortspec.md"
+  ]
+}

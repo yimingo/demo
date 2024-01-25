@@ -1,0 +1,11 @@
+{
+  "anuppuccin-theme-settings-extended@@catppuccin-theme-extended": "ctp-atom-light",
+  "anuppuccin-theme-settings-extended@@anp-theme-ext-dark": true,
+  "anuppuccin-theme-settings-extended@@catppuccin-theme-dark-extended": "ctp-atom-dark",
+  "anuppuccin-theme-settings@@anp-layout-select": "anp-card-layout",
+  "anuppuccin-theme-settings@@anp-alt-rainbow-style": "anp-default-rainbow",
+  "anuppuccin-theme-settings@@anp-rainbow-file-toggle": false,
+  "anuppuccin-theme-settings@@anp-card-radius": 10,
+  "anuppuccin-theme-settings@@anp-card-shadows": false,
+  "anuppuccin-theme-settings@@anp-card-layout-filebrowser": true
+}
