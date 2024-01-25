@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "c5bdec4a3facafc4",
+        "id": "4fb5235055b4ac8b",
         "type": "tabs",
         "children": [
           {
-            "id": "dda8f437529759d3",
+            "id": "6793431461be846e",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -185,16 +185,15 @@
       "flomo-importer:Flomo Importer": false,
       "templater-obsidian:Templater": false,
       "file-tree-alternative:File Tree Alternative Plugin": false,
-      "custom-sort:Toggle custom sorting": false,
-      "obsidian-memos:Memos": false
+      "custom-sort:Toggle custom sorting": false
     }
   },
-  "active": "35ce7a43408c94b1",
+  "active": "6793431461be846e",
   "lastOpenFiles": [
-    "Obsidian牛掰却让新手头疼的笔记软件，这教程给你喂到嘴边，不会你找我退币.md",
     "测试git.md",
-    "sortspec.md",
     "测试2.md",
+    "Obsidian牛掰却让新手头疼的笔记软件，这教程给你喂到嘴边，不会你找我退币.md",
+    "sortspec.md",
     "Obsidian牛掰却让新手头疼的笔记软件，这教程给你喂到嘴边，不会你找我退币.pdf"
   ]
 }
