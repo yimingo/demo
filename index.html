@@ -3,1330 +3,263 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>劳动防护用品管理原型</title>
-  <link rel="stylesheet" href="./styles.css" />
+  <title>轻健记 · 本地单文件 Demo</title>
+  <style>
+    :root {
+      --bg: #edf2f7;
+      --phone: #ffffff;
+      --text: #1f2937;
+      --sub: #6b7280;
+      --line: #e5e7eb;
+      --primary: #0f9f75;
+      --warn: #d97706;
+      --danger: #dc2626;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: linear-gradient(180deg, #e6f6f0, #edf2f7 120px);
+      color: var(--text);
+      display: grid;
+      place-items: center;
+      min-height: 100vh;
+      padding: 16px;
+    }
+    .phone {
+      width: min(100%, 420px);
+      height: min(92vh, 860px);
+      background: var(--phone);
+      border: 1px solid #d1d5db;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 22px 50px rgba(15, 23, 42, .15);
+      display: flex;
+      flex-direction: column;
+    }
+    .topbar {
+      padding: 14px 16px 10px;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+    .topbar h1 { margin: 0; font-size: 20px; }
+    .topbar p { margin: 4px 0 0; color: var(--sub); font-size: 12px; }
+    .content { flex: 1; overflow: auto; padding: 12px; padding-bottom: 88px; }
+    .panel { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 12px; margin-bottom: 10px; }
+    .panel h2 { margin: 0; font-size: 16px; }
+    .panel-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .metrics { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .metric-card { border: 1px solid var(--line); border-radius: 10px; padding: 8px; background: #fbfdfc; }
+    .metric-card b { display: block; font-size: 13px; margin-bottom: 4px; }
+    .metric-card strong { font-size: 14px; }
+    .row { margin-bottom: 8px; display: flex; flex-direction: column; gap: 6px; }
+    input, select, button { font: inherit; }
+    input, select {
+      height: 40px; padding: 0 10px;
+      border: 1px solid var(--line); border-radius: 10px;
+      background: #fff;
+    }
+    .row.inline { flex-direction: row; }
+    .btn {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 10px;
+      height: 38px;
+      padding: 0 12px;
+      cursor: pointer;
+    }
+    .btn.primary { background: var(--primary); border-color: var(--primary); color: #fff; }
+    .tabs { display: none; gap: 8px; margin-bottom: 8px; }
+    .tab-btn { flex: 1; height: 36px; border: 1px solid var(--line); background: #fff; border-radius: 8px; }
+    .tab-btn.active { border-color: var(--primary); color: var(--primary); background: #ecfdf5; }
+    .section { display: none; }
+    .section.active { display: block; }
+    .list { list-style: none; margin: 0; padding: 0; }
+    .list li { border-bottom: 1px dashed var(--line); padding: 8px 0; font-size: 13px; }
+    .tag { border-radius: 999px; padding: 1px 7px; color: #fff; font-size: 11px; margin-left: 6px; }
+    .tag.ok { background: var(--primary); }
+    .tag.warn { background: var(--warn); }
+    .tag.danger { background: var(--danger); }
+    .bottom-nav {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      border-top: 1px solid var(--line);
+      background: #fff;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      height: 64px;
+    }
+    .nav-btn { border: 0; background: transparent; color: var(--sub); font-size: 12px; }
+    .nav-btn.active { color: var(--primary); font-weight: 600; }
+    .hint { color: var(--sub); font-size: 12px; }
+    .toast { position: fixed; bottom: 18px; right: 18px; background: #111827; color: #fff; padding: 8px 10px; border-radius: 8px; opacity: 0; transform: translateY(8px); transition: .2s; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+  </style>
 </head>
 <body>
-  <div class="layout">
-    <header class="app-header">
-      <div class="brand-wrap">
-        <div class="logo-mark">Q</div>
-        <div class="brand-text">
-          <strong>智慧运营一体化管理平台</strong>
-          <span>劳动防护用品管理原型</span>
-        </div>
-      </div>
-
-      <div class="header-center">
-        <button class="platform-chip active">安全生产管理</button>
-      </div>
-
-      <div class="header-actions">
-        <button class="notice-pill">此档有惊喜！</button>
-        <div class="user-box">
-          <div class="avatar">孙</div>
-          <span>孙书星</span>
-        </div>
-      </div>
+  <div class="phone">
+    <header class="topbar">
+      <h1>轻健记</h1>
+      <p>离线版：双击 index.html 即可演示</p>
     </header>
 
-    <div class="body-shell">
-      <aside class="sidebar">
-        <div class="sidebar-scroll">
-          <button class="menu-item">
-            <span class="menu-icon home-icon"></span>
-            <span>首页</span>
-          </button>
-          <button class="menu-item">
-            <span class="menu-icon risk-icon"></span>
-            <span>风险管理</span>
-            <i class="menu-expand">▾</i>
-          </button>
-          <button class="menu-item">
-            <span class="menu-icon hidden-icon"></span>
-            <span>隐患管理</span>
-            <i class="menu-expand">▾</i>
-          </button>
-          <button class="menu-item">
-            <span class="menu-icon train-icon"></span>
-            <span>安全教育培训</span>
-            <i class="menu-expand">▾</i>
-          </button>
-          <button class="menu-item">
-            <span class="menu-icon illegal-icon"></span>
-            <span>违章管理</span>
-            <i class="menu-expand">▾</i>
-          </button>
-
-          <section class="menu-group expanded">
-            <button class="menu-item group-title active">
-              <span class="menu-icon labor-icon"></span>
-              <span>劳动防护用品</span>
-              <i class="arrow">▾</i>
-            </button>
-
-            <div class="subnav">
-              <button class="subnav-link active" data-target="submenu-1">劳动防护用品管理</button>
-              <button class="subnav-link" data-target="submenu-2">公用物资台账</button>
-              <button class="subnav-link" data-target="submenu-3">公用物资报废台账</button>
-              <button class="subnav-link" data-target="submenu-4">公用物资借用台账</button>
-              <button class="subnav-link" data-target="submenu-5">个人领用登记表</button>
-              <button class="subnav-link" data-target="submenu-6">特殊劳动防护用品</button>
-            </div>
-          </section>
-
-          <button class="menu-item">
-            <span class="menu-icon duty-icon"></span>
-            <span>安全责任制</span>
-            <i class="menu-expand">▾</i>
-          </button>
-          <button class="menu-item">
-            <span class="menu-icon injury-icon"></span>
-            <span>客伤管理</span>
-            <i class="menu-expand">▾</i>
-          </button>
-          <button class="menu-item">
-            <span class="menu-icon emergency-icon"></span>
-            <span>应急管理</span>
-            <i class="menu-expand">▾</i>
-          </button>
-          <button class="menu-item">
-            <span class="menu-icon fire-icon"></span>
-            <span>消防管理</span>
-            <i class="menu-expand">▾</i>
-          </button>
-          <button class="menu-item">
-            <span class="menu-icon accident-icon"></span>
-            <span>事故事件管理</span>
-            <i class="menu-expand">▾</i>
-          </button>
+    <main class="content">
+      <section id="sec-home" class="section active">
+        <div class="panel">
+          <div class="panel-head"><h2>今日概览</h2><span id="todayDate" class="hint"></span></div>
+          <div id="metricCards" class="metrics"></div>
         </div>
-      </aside>
-
-      <main class="content">
-        <div class="content-card">
-          <div class="content-head">
-            <div>
-              <p class="bread">安全生产管理 / 劳动防护用品 / <span id="breadcrumbLabel">劳动防护用品管理</span></p>
-              <h1 id="pageTitle">劳动防护用品管理</h1>
-            </div>
-            <div class="head-actions">
-              <button class="btn btn-light action-btn" data-drawer="import">导入</button>
-              <button class="btn btn-light action-btn" data-drawer="detail">导出</button>
-              <button class="btn btn-primary action-btn" data-drawer="assign">新增</button>
-            </div>
-          </div>
-
-          <section class="panel active" id="submenu-1">
-            <div class="metric-row">
-              <article class="metric-card">
-                <span>物资池总量</span>
-                <strong>3,286</strong>
-                <em>来自物资管理系统出库同步</em>
-              </article>
-              <article class="metric-card">
-                <span>剩余可分配</span>
-                <strong>1,964</strong>
-                <em>个人、公用、外部人员待分配</em>
-              </article>
-              <article class="metric-card">
-                <span>本季超期未换</span>
-                <strong>128</strong>
-                <em>自动提醒管理人员</em>
-              </article>
-              <article class="metric-card">
-                <span>待审批更换</span>
-                <strong>14</strong>
-                <em>与员工端申请联动</em>
-              </article>
-            </div>
-
-            <div class="workflow-strip">
-              <div class="workflow-step"><b>1</b><span>出库同步</span></div>
-              <div class="workflow-step"><b>2</b><span>入物资池</span></div>
-              <div class="workflow-step"><b>3</b><span>分配领用</span></div>
-              <div class="workflow-step"><b>4</b><span>到期/损坏提醒</span></div>
-              <div class="workflow-step"><b>5</b><span>回写台账</span></div>
-            </div>
-
-            <div class="filter-bar">
-              <label class="field">
-                <span>物资名称</span>
-                <input type="text" placeholder="请输入" />
-              </label>
-              <label class="field">
-                <span>部门</span>
-                <select>
-                  <option>请选择</option>
-                  <option>自动化中心</option>
-                  <option>输电运检中心</option>
-                  <option>变电检修中心</option>
-                </select>
-              </label>
-              <label class="field">
-                <span>物资分类</span>
-                <select>
-                  <option>请选择</option>
-                  <option>劳动防护用品</option>
-                  <option>特殊劳动防护用品</option>
-                  <option>公用物资</option>
-                </select>
-              </label>
-              <div class="filter-actions">
-                <button class="btn btn-search action-btn">搜索</button>
-                <button class="btn btn-light action-btn">重置</button>
-                <button class="btn btn-primary action-btn" data-drawer="assign">批量分配</button>
-              </div>
-            </div>
-
-            <div class="table-card">
-              <div class="table-toolbar">
-                <div class="tool-tag">支持分配部门、分配公用、分配个人、分配外部人员，外部人员统一入虚拟账户</div>
-                <div class="table-stat">本次同步 101 项</div>
-              </div>
-              <table>
-                <thead>
-                  <tr>
-                    <th>序号</th>
-                    <th>部门/站区</th>
-                    <th>班组/车站</th>
-                    <th>物资名称</th>
-                    <th>物资分类</th>
-                    <th>总数</th>
-                    <th>剩余数量</th>
-                    <th>单位</th>
-                    <th>分配方式</th>
-                    <th>分配时间</th>
-                    <th>状态</th>
-                    <th>操作</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>自动化中心</td>
-                    <td>信号一部-一班</td>
-                    <td>冬季保暖棉服</td>
-                    <td>劳动防护用品</td>
-                    <td>2</td>
-                    <td>2</td>
-                    <td>项</td>
-                    <td>分配个人</td>
-                    <td>2026-04-21 09:10</td>
-                    <td><span class="status-tag waiting">待领用确认</span></td>
-                    <td>
-                      <button class="inline-btn action-btn" data-drawer="detail">查看</button>
-                      <button class="inline-btn action-btn" data-drawer="assign">修改</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>自动化中心</td>
-                    <td>信号一部-二班</td>
-                    <td>分体雨衣</td>
-                    <td>劳动防护用品</td>
-                    <td>12</td>
-                    <td>12</td>
-                    <td>套</td>
-                    <td>分配公用</td>
-                    <td>2026-04-20 14:30</td>
-                    <td><span class="status-tag normal">已领用</span></td>
-                    <td>
-                      <button class="inline-btn action-btn" data-drawer="detail">查看</button>
-                      <button class="inline-btn action-btn" data-drawer="assign">修改</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>3</td>
-                    <td>变电检修中心</td>
-                    <td>高压试验班</td>
-                    <td>35Kv 绝缘手套</td>
-                    <td>特殊劳动防护用品</td>
-                    <td>46</td>
-                    <td>46</td>
-                    <td>双</td>
-                    <td>分配个人</td>
-                    <td>2026-04-18 08:20</td>
-                    <td><span class="status-tag special">待编码</span></td>
-                    <td>
-                      <button class="inline-btn action-btn" data-drawer="detail">查看</button>
-                      <button class="inline-btn action-btn" data-drawer="assign">编码</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>4</td>
-                    <td>输电运检中心</td>
-                    <td>输电二班</td>
-                    <td>安全帽</td>
-                    <td>劳动防护用品</td>
-                    <td>29</td>
-                    <td>16</td>
-                    <td>个</td>
-                    <td>分配外部人员</td>
-                    <td>2026-04-15 10:00</td>
-                    <td><span class="status-tag normal">虚拟账户</span></td>
-                    <td>
-                      <button class="inline-btn action-btn" data-drawer="detail">查看</button>
-                      <button class="inline-btn action-btn" data-drawer="assign">修改</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <div class="pagination">
-                <span>共 101 项数据</span>
-                <div class="pagination-right">
-                  <span>10 条/页</span>
-                  <span class="page-current">1</span>
-                  <span>2</span>
-                  <span>3</span>
-                  <span>...</span>
-                  <span>20</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="grid-two">
-              <section class="info-card">
-                <div class="block-head">
-                  <h3>联动说明</h3>
-                </div>
-                <ul class="plain-list">
-                  <li>接收物资管理系统出库信息，实时更新总数、剩余数量和分配状态。</li>
-                  <li>分配后可回写个人领用登记表、公用物资台账和特殊用品台账。</li>
-                  <li>支持导入、导出、修改、删除和详情查看。</li>
-                </ul>
-              </section>
-              <section class="info-card">
-                <div class="block-head">
-                  <h3>自动通知</h3>
-                </div>
-                <div class="notice-list">
-                  <div class="notice-item warn">按标准配置自动计算应发数量，若未足量发放则通知管理人员。</div>
-                  <div class="notice-item danger">本季发现 7 条超期未更换记录，系统已推送预警。</div>
-                  <div class="notice-item info">物资管理系统同步完成，最新库存已刷新。</div>
-                </div>
-              </section>
-            </div>
-
-            <div class="scene-tabs">
-              <button class="scene-tab active" data-scene="my-items">我的劳动防护用品</button>
-              <button class="scene-tab" data-scene="borrowed-items">我借用的劳动防护用品</button>
-              <button class="scene-tab" data-scene="analysis">统计分析</button>
-              <button class="scene-tab" data-scene="notifications">通知中心</button>
-            </div>
-
-            <div class="scene-panel active" id="my-items">
-              <div class="grid-two">
-                <section class="table-card">
-                  <div class="table-toolbar">
-                    <div class="tool-tag">当前用户待领用 / 待更换劳保用品</div>
-                    <button class="btn btn-primary action-btn" data-drawer="receive">领取</button>
-                  </div>
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>物资名称</th>
-                        <th>物资分类</th>
-                        <th>发放时间</th>
-                        <th>分配人</th>
-                        <th>领用状态</th>
-                        <th>备注</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>安全帽</td>
-                        <td>劳动防护用品</td>
-                        <td>2026-04-20</td>
-                        <td>王海峰</td>
-                        <td><span class="status-tag waiting">待领取</span></td>
-                        <td>
-                          <button class="inline-btn action-btn" data-drawer="receive">领取</button>
-                          <button class="inline-btn action-btn" data-drawer="replace">更换</button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>绝缘手套</td>
-                        <td>特殊劳动防护用品</td>
-                        <td>2026-04-12</td>
-                        <td>李春雷</td>
-                        <td><span class="status-tag normal">已确认</span></td>
-                        <td>已手写签字确认</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </section>
-                <section class="info-card">
-                  <div class="block-head">
-                    <h3>领取流程</h3>
-                  </div>
-                  <ul class="plain-list">
-                    <li>PC 和 APP 同步显示待领用数据。</li>
-                    <li>领取时触发手写签字确认，完成后自动回写状态。</li>
-                    <li>更换申请可从员工端发起并进入审批流。</li>
-                  </ul>
-                  <div class="signature-box">手写签字区预览</div>
-                </section>
-              </div>
-            </div>
-
-            <div class="scene-panel" id="borrowed-items">
-              <div class="grid-two">
-                <section class="table-card">
-                  <div class="table-toolbar">
-                    <div class="tool-tag">已借用用品列表</div>
-                    <button class="btn btn-primary action-btn" data-drawer="return">借用 / 归还</button>
-                  </div>
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>物资名称</th>
-                        <th>物资分类</th>
-                        <th>状态</th>
-                        <th>借用时间</th>
-                        <th>归还时间</th>
-                        <th>备注</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>安全带</td>
-                        <td>公用物资</td>
-                        <td><span class="status-tag waiting">借用中</span></td>
-                        <td>2026-04-12 09:00</td>
-                        <td>2026-04-25</td>
-                        <td><button class="inline-btn action-btn" data-drawer="return">归还</button></td>
-                      </tr>
-                      <tr>
-                        <td>验电器</td>
-                        <td>公用物资</td>
-                        <td><span class="status-tag normal">已归还</span></td>
-                        <td>2026-04-02 14:00</td>
-                        <td>2026-04-18</td>
-                        <td>归还完成</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </section>
-                <section class="info-card">
-                  <div class="block-head">
-                    <h3>借用规则</h3>
-                  </div>
-                  <ul class="plain-list">
-                    <li>支持部门公用用品借用。</li>
-                    <li>借用后自动形成借用台账并同步提醒归还时间。</li>
-                    <li>逾期未还时自动推送管理人员。</li>
-                  </ul>
-                </section>
-              </div>
-            </div>
-
-            <div class="scene-panel" id="analysis">
-              <div class="grid-two">
-                <section class="info-card">
-                  <div class="block-head">
-                    <h3>中心维度统计</h3>
-                  </div>
-                  <div class="analysis-list">
-                    <div class="analysis-row"><span>物资剩余数量</span><b>1,964</b></div>
-                    <div class="analysis-row"><span>当前季度超期未更换人员</span><b>23</b></div>
-                    <div class="analysis-row"><span>特殊物品检测超期</span><b>11</b></div>
-                    <div class="analysis-row"><span>更换申请数量</span><b>86</b></div>
-                  </div>
-                </section>
-                <section class="info-card">
-                  <div class="block-head">
-                    <h3>管理支撑</h3>
-                  </div>
-                  <div class="notice-list">
-                    <div class="notice-item info">按中心、专业、岗位、班组穿透统计。</div>
-                    <div class="notice-item warn">自动识别缺发、迟发、多发与超期未检。</div>
-                    <div class="notice-item normal">生成采购计划、台账和季度提报清单。</div>
-                  </div>
-                </section>
-              </div>
-            </div>
-
-            <div class="scene-panel" id="notifications">
-              <div class="grid-two">
-                <section class="info-card">
-                  <div class="block-head">
-                    <h3>通知结果</h3>
-                  </div>
-                  <div class="notice-list">
-                    <div class="notice-item danger">某班组劳保发放不足，已通知管理人员补发。</div>
-                    <div class="notice-item warn">35Kv 绝缘产品下次检测时间将到，已提醒责任人。</div>
-                    <div class="notice-item info">季度需求清单已生成，等待上报物资后勤中心。</div>
-                  </div>
-                </section>
-                <section class="info-card">
-                  <div class="block-head">
-                    <h3>规则闭环</h3>
-                  </div>
-                  <ul class="plain-list">
-                    <li>根据发放标准自动计算应发数量。</li>
-                    <li>未足量发放自动通知管理人员。</li>
-                    <li>结合特殊用品检测周期推送提醒通知。</li>
-                  </ul>
-                </section>
-              </div>
-            </div>
-          </section>
-
-          <section class="panel" id="submenu-2">
-            <div class="section-banner">
-              <div>
-                <h2>公用物资台账</h2>
-                <p>展示各部门公用物资数据，支持查询、修改、导入和报废。</p>
-              </div>
-              <div class="mini-summary">
-                <strong>271</strong>
-                <span>在册公用物资</span>
-              </div>
-            </div>
-
-            <div class="filter-bar">
-              <label class="field">
-                <span>部门</span>
-                <input type="text" placeholder="请输入部门/站区" />
-              </label>
-              <label class="field">
-                <span>物资名称</span>
-                <input type="text" placeholder="请输入" />
-              </label>
-              <label class="field">
-                <span>物资分类</span>
-                <select>
-                  <option>请选择</option>
-                  <option>公用物资</option>
-                  <option>劳动防护用品</option>
-                </select>
-              </label>
-              <div class="filter-actions">
-                <button class="btn btn-search action-btn">搜索</button>
-                <button class="btn btn-light action-btn">重置</button>
-                <button class="btn btn-primary action-btn" data-drawer="scrap">报废</button>
-              </div>
-            </div>
-
-            <div class="table-card">
-              <table>
-                <thead>
-                  <tr>
-                    <th>序号</th>
-                    <th>部门/站区</th>
-                    <th>班组/车站</th>
-                    <th>物资名称</th>
-                    <th>物资分类</th>
-                    <th>总数</th>
-                    <th>剩余数量</th>
-                    <th>单位</th>
-                    <th>备注</th>
-                    <th>操作</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>配网中心</td>
-                    <td>带电作业班</td>
-                    <td>安全带</td>
-                    <td>公用物资</td>
-                    <td>32</td>
-                    <td>18</td>
-                    <td>套</td>
-                    <td>可报废检测</td>
-                    <td>
-                      <button class="inline-btn action-btn" data-drawer="scrap">报废</button>
-                      <button class="inline-btn action-btn" data-drawer="detail">详情</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>输电运检中心</td>
-                    <td>运检一班</td>
-                    <td>绝缘梯</td>
-                    <td>公用物资</td>
-                    <td>8</td>
-                    <td>3</td>
-                    <td>架</td>
-                    <td>待巡检</td>
-                    <td>
-                      <button class="inline-btn action-btn" data-drawer="scrap">报废</button>
-                      <button class="inline-btn action-btn" data-drawer="detail">详情</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
-
-          <section class="panel" id="submenu-3">
-            <div class="section-banner">
-              <div>
-                <h2>公用物资报废台账</h2>
-                <p>展示报废记录，支持撤消报废、多条件查询和留痕追踪。</p>
-              </div>
-              <div class="mini-summary danger-text">
-                <strong>12</strong>
-                <span>待确认报废</span>
-              </div>
-            </div>
-
-            <div class="filter-bar">
-              <label class="field">
-                <span>部门</span>
-                <input type="text" placeholder="请输入部门/站区" />
-              </label>
-              <label class="field">
-                <span>物资名称</span>
-                <input type="text" placeholder="请输入" />
-              </label>
-              <label class="field">
-                <span>物资分类</span>
-                <select>
-                  <option>请选择</option>
-                  <option>公用物资</option>
-                  <option>劳动防护用品</option>
-                </select>
-              </label>
-              <div class="filter-actions">
-                <button class="btn btn-search action-btn">搜索</button>
-                <button class="btn btn-light action-btn">重置</button>
-                <button class="btn btn-primary action-btn" data-drawer="undo-scrap">撤消报废</button>
-              </div>
-            </div>
-
-            <div class="table-card">
-              <table>
-                <thead>
-                  <tr>
-                    <th>序号</th>
-                    <th>部门/站区</th>
-                    <th>班组/车站</th>
-                    <th>物资名称</th>
-                    <th>物资分类</th>
-                    <th>报废数量</th>
-                    <th>单位</th>
-                    <th>报废时间</th>
-                    <th>操作人</th>
-                    <th>备注</th>
-                    <th>操作</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>变电检修中心</td>
-                    <td>继保车间</td>
-                    <td>安全带</td>
-                    <td>公用物资</td>
-                    <td>6</td>
-                    <td>套</td>
-                    <td>2026-04-14</td>
-                    <td>李春雷</td>
-                    <td>织带磨损</td>
-                    <td>
-                      <button class="inline-btn action-btn" data-drawer="undo-scrap">撤消报废</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>输电运检中心</td>
-                    <td>运检二班</td>
-                    <td>绝缘梯</td>
-                    <td>公用物资</td>
-                    <td>1</td>
-                    <td>架</td>
-                    <td>2026-04-08</td>
-                    <td>王海峰</td>
-                    <td>检测不合格</td>
-                    <td>
-                      <button class="inline-btn action-btn" data-drawer="undo-scrap">撤消报废</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
-
-          <section class="panel" id="submenu-4">
-            <div class="section-banner">
-              <div>
-                <h2>公用物资借用台账</h2>
-                <p>展示借用数据，支持归还和状态跟踪。</p>
-              </div>
-              <div class="mini-summary warn-text">
-                <strong>73</strong>
-                <span>借用中</span>
-              </div>
-            </div>
-
-            <div class="filter-bar">
-              <label class="field">
-                <span>部门</span>
-                <input type="text" placeholder="请输入部门/站区" />
-              </label>
-              <label class="field">
-                <span>物资名称</span>
-                <input type="text" placeholder="请输入" />
-              </label>
-              <label class="field">
-                <span>物资分类</span>
-                <select>
-                  <option>请选择</option>
-                  <option>公用物资</option>
-                  <option>劳动防护用品</option>
-                </select>
-              </label>
-              <div class="filter-actions">
-                <button class="btn btn-search action-btn">搜索</button>
-                <button class="btn btn-light action-btn">重置</button>
-                <button class="btn btn-primary action-btn" data-drawer="return">归还</button>
-              </div>
-            </div>
-
-            <div class="table-card">
-              <table>
-                <thead>
-                  <tr>
-                    <th>序号</th>
-                    <th>部门/站区</th>
-                    <th>班组/车站</th>
-                    <th>物资名称</th>
-                    <th>物资分类</th>
-                    <th>借用数量</th>
-                    <th>单位</th>
-                    <th>借用人</th>
-                    <th>借用时间</th>
-                    <th>归还状态</th>
-                    <th>备注</th>
-                    <th>操作</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>配网带电作业班</td>
-                    <td>带电三组</td>
-                    <td>安全带</td>
-                    <td>公用物资</td>
-                    <td>2</td>
-                    <td>套</td>
-                    <td>王海峰</td>
-                    <td>2026-04-12 09:00</td>
-                    <td><span class="status-tag waiting">借用中</span></td>
-                    <td>预计 04-25 归还</td>
-                    <td><button class="inline-btn action-btn" data-drawer="return">归还</button></td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>输电运检一班</td>
-                    <td>运检一组</td>
-                    <td>验电器</td>
-                    <td>公用物资</td>
-                    <td>1</td>
-                    <td>个</td>
-                    <td>李春雷</td>
-                    <td>2026-04-02 14:00</td>
-                    <td><span class="status-tag normal">已归还</span></td>
-                    <td>已完成</td>
-                    <td><button class="inline-btn action-btn" data-drawer="detail">详情</button></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
-
-          <section class="panel" id="submenu-5">
-            <div class="section-banner">
-              <div>
-                <h2>个人领用登记表</h2>
-                <p>展示个人劳保用品领用数据，支持按人按年导出 ZIP 压缩包。</p>
-              </div>
-              <div class="mini-summary">
-                <strong>1,510</strong>
-                <span>年度登记人数</span>
-              </div>
-            </div>
-
-            <div class="filter-bar">
-              <label class="field">
-                <span>物资名称</span>
-                <input type="text" placeholder="请输入" />
-              </label>
-              <label class="field">
-                <span>物资分类</span>
-                <select>
-                  <option>请选择</option>
-                  <option>劳动防护用品</option>
-                  <option>特殊劳动防护用品</option>
-                </select>
-              </label>
-              <label class="field">
-                <span>导出年份</span>
-                <select>
-                  <option>2026</option>
-                  <option>2025</option>
-                </select>
-              </label>
-              <div class="filter-actions">
-                <button class="btn btn-search action-btn">搜索</button>
-                <button class="btn btn-light action-btn">重置</button>
-                <button class="btn btn-primary action-btn" data-drawer="export-zip">导出ZIP</button>
-              </div>
-            </div>
-
-            <div class="grid-two">
-              <section class="table-card">
-                <div class="table-toolbar">
-                  <div class="tool-tag">可按年份及人员范围导出，文件为 ZIP 压缩包</div>
-                  <button class="btn btn-primary action-btn" data-drawer="export-zip">导出</button>
-                </div>
-                <table>
-                  <thead>
-                    <tr>
-                      <th>序号</th>
-                      <th>部门/站区</th>
-                      <th>班组/车站</th>
-                      <th>物资名称</th>
-                      <th>物资分类</th>
-                      <th>领用数量</th>
-                      <th>单位</th>
-                      <th>领用人</th>
-                      <th>工号</th>
-                      <th>发放时间</th>
-                      <th>领用状态</th>
-                      <th>领用时间</th>
-                      <th>发放人员</th>
-                      <th>备注</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>1</td>
-                      <td>输电运检中心</td>
-                      <td>输电二班</td>
-                      <td>安全帽</td>
-                      <td>劳动防护用品</td>
-                      <td>1</td>
-                      <td>个</td>
-                      <td>陈立</td>
-                      <td>100218</td>
-                      <td>2026-04-20</td>
-                      <td><span class="status-tag normal">已领用</span></td>
-                      <td>2026-04-20 14:12</td>
-                      <td>王海峰</td>
-                      <td>签字完成</td>
-                    </tr>
-                    <tr>
-                      <td>2</td>
-                      <td>变电检修中心</td>
-                      <td>高压试验班</td>
-                      <td>绝缘手套</td>
-                      <td>特殊劳动防护用品</td>
-                      <td>1</td>
-                      <td>双</td>
-                      <td>周娜</td>
-                      <td>100436</td>
-                      <td>2026-04-12</td>
-                      <td><span class="status-tag waiting">待确认</span></td>
-                      <td>2026-04-12 16:40</td>
-                      <td>李春雷</td>
-                      <td>待签字</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </section>
-              <section class="info-card">
-                <div class="block-head">
-                  <h3>导出设置</h3>
-                </div>
-                <ul class="plain-list">
-                  <li>支持以人为单位按年导出。</li>
-                  <li>可指定导出年份及导出人员范围。</li>
-                  <li>导出文件以 ZIP 压缩包提供。</li>
-                </ul>
-                <div class="signature-box">导出预览 / ZIP 文件信息</div>
-              </section>
-            </div>
-          </section>
-
-          <section class="panel" id="submenu-6">
-            <div class="section-banner">
-              <div>
-                <h2>特殊劳动防护用品</h2>
-                <p>为 35Kv / 12Kv 绝缘产品生成管理编码，按周期提醒检测并形成专项台账。</p>
-              </div>
-              <div class="mini-summary green-text">
-                <strong>19</strong>
-                <span>待送检</span>
-              </div>
-            </div>
-
-            <div class="filter-bar">
-              <label class="field">
-                <span>物品名称</span>
-                <input type="text" placeholder="请输入" />
-              </label>
-              <label class="field">
-                <span>编号</span>
-                <input type="text" placeholder="请输入" />
-              </label>
-              <label class="field">
-                <span>部门</span>
-                <input type="text" placeholder="请输入部门/站区" />
-              </label>
-              <div class="filter-actions">
-                <button class="btn btn-search action-btn">搜索</button>
-                <button class="btn btn-light action-btn">重置</button>
-                <button class="btn btn-light action-btn" data-drawer="edit">新增</button>
-                <button class="btn btn-light action-btn" data-drawer="edit">编辑</button>
-                <button class="btn btn-light action-btn" data-drawer="delete">删除</button>
-                <button class="btn btn-light action-btn" data-drawer="import">导入</button>
-                <button class="btn btn-primary action-btn" data-drawer="check">更新检查时间</button>
-              </div>
-            </div>
-
-            <div class="metric-row compact-metrics">
-              <article class="metric-card">
-                <span>35Kv 台账</span>
-                <strong>86</strong>
-                <em>已自动编码</em>
-              </article>
-              <article class="metric-card">
-                <span>12Kv 台账</span>
-                <strong>134</strong>
-                <em>在册可追踪</em>
-              </article>
-              <article class="metric-card">
-                <span>15天内提醒</span>
-                <strong>11</strong>
-                <em>上次送检为依据</em>
-              </article>
-            </div>
-
-            <div class="table-card">
-              <div class="table-toolbar">
-                <div class="tool-tag">提前 15 天提醒待检查数据，并根据送检、报废情况生成专项台账</div>
-                <button class="btn btn-primary action-btn" data-drawer="check">录入检查时间</button>
-              </div>
-              <table>
-                <thead>
-                  <tr>
-                    <th>部门/站区</th>
-                    <th>班组/车站</th>
-                    <th>编号</th>
-                    <th>物品名称</th>
-                    <th>存放地点</th>
-                    <th>负责人</th>
-                    <th>检查周期</th>
-                    <th>检查时间</th>
-                    <th>备注</th>
-                    <th>操作</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>变电检修中心</td>
-                    <td>高压试验班</td>
-                    <td>TS-35KV-000128</td>
-                    <td>绝缘手套</td>
-                    <td>高压库房</td>
-                    <td>王海峰</td>
-                    <td>6个月</td>
-                    <td>2026-04-01</td>
-                    <td>30天内送检</td>
-                    <td>
-                      <button class="inline-btn action-btn" data-drawer="check">更新</button>
-                      <button class="inline-btn action-btn" data-drawer="delete">删除</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>输电运检中心</td>
-                    <td>运检二班</td>
-                    <td>TS-12KV-000442</td>
-                    <td>绝缘靴</td>
-                    <td>中心库房</td>
-                    <td>李春雷</td>
-                    <td>12个月</td>
-                    <td>2026-01-15</td>
-                    <td>正常</td>
-                    <td>
-                      <button class="inline-btn action-btn" data-drawer="check">更新</button>
-                      <button class="inline-btn action-btn" data-drawer="detail">详情</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <div class="grid-two">
-              <section class="info-card">
-                <div class="block-head">
-                  <h3>检测提醒逻辑</h3>
-                </div>
-                <ul class="plain-list">
-                  <li>以上次送检日期为依据提示下次检测时间。</li>
-                  <li>提前 15 天提醒待检查数据。</li>
-                  <li>送检、报废情况汇总后生成《特殊劳动防护用品管理台账》。</li>
-                </ul>
-              </section>
-              <section class="info-card">
-                <div class="block-head">
-                  <h3>自动编码</h3>
-                </div>
-                <ul class="plain-list">
-                  <li>35Kv / 12Kv 绝缘产品发放后自动生成编号。</li>
-                  <li>效期管理和日常管理模块关联更新公用物资使用情况。</li>
-                  <li>检查时间更新后自动回写到台账和通知中心。</li>
-                </ul>
-              </section>
-            </div>
-          </section>
+        <div class="panel">
+          <div class="panel-head"><h2>快捷操作</h2></div>
+          <button id="gotoRecord" class="btn primary">去记录</button>
         </div>
-      </main>
-    </div>
+      </section>
+
+      <section id="sec-record" class="section">
+        <div class="panel">
+          <div class="panel-head"><h2>随手记录</h2><span class="hint">仅本地存储</span></div>
+          <form id="recordForm">
+            <div class="row"><label>指标</label><select id="metricType"><option value="headache">头痛/头晕</option><option value="blood_pressure">血压</option><option value="blood_glucose">血糖</option><option value="weight">体重</option><option value="heart_rate">心率</option></select></div>
+            <div id="dynamicFields"></div>
+            <div class="row"><label>备注</label><input id="note" maxlength="40" placeholder="例如：午后头晕" /></div>
+            <div class="row inline"><button class="btn primary" type="submit">保存</button><button class="btn" type="button" id="resetBtn">清空</button></div>
+          </form>
+        </div>
+      </section>
+
+      <section id="sec-trend" class="section">
+        <div class="panel"><div class="panel-head"><h2>近 7 天趋势（示意）</h2></div><ul id="trendList" class="list"></ul></div>
+      </section>
+
+      <section id="sec-me" class="section">
+        <div class="panel"><div class="panel-head"><h2>最近记录</h2><button id="exportBtn" class="btn">导出 JSON</button></div><ul id="recordList" class="list"></ul></div>
+        <div class="panel"><p class="hint">⚠️ 仅演示用途，不构成医疗诊断建议。</p></div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav">
+      <button class="nav-btn active" data-target="home">首页</button>
+      <button class="nav-btn" data-target="record">记录</button>
+      <button class="nav-btn" data-target="trend">趋势</button>
+      <button class="nav-btn" data-target="me">我的</button>
+    </nav>
   </div>
 
-  <div class="drawer-backdrop" id="drawerBackdrop"></div>
-  <aside class="drawer" id="drawer">
-    <div class="drawer-head">
-      <div>
-        <p class="drawer-kicker">高保真操作抽屉</p>
-        <h2 id="drawerTitle">操作详情</h2>
-      </div>
-      <button class="drawer-close" id="drawerClose">×</button>
-    </div>
-    <p class="drawer-desc" id="drawerDesc">这里用于承接分配、报废、归还、导出和检查时间更新等关键流程。</p>
+  <div id="toast" class="toast"></div>
 
-    <div class="drawer-badges" id="drawerBadges"></div>
+  <script>
+    const STORAGE_KEY = 'health_demo_records_v2';
+    const metricLabels = { headache: '头痛/头晕', blood_pressure: '血压', blood_glucose: '血糖', weight: '体重', heart_rate: '心率' };
+    let records = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
 
-    <div class="drawer-body">
-      <div class="drawer-section active" data-mode="detail">
-        <div class="drawer-grid">
-          <label class="field">
-            <span>同步来源</span>
-            <input type="text" value="物资管理系统" />
-          </label>
-          <label class="field">
-            <span>同步状态</span>
-            <input type="text" value="实时更新" />
-          </label>
-          <label class="field">
-            <span>回写状态</span>
-            <input type="text" value="已回写台账 / 审批流" />
-          </label>
-          <label class="field">
-            <span>备注</span>
-            <textarea rows="3">支持导入、修改、删除、查看详情以及联动回写。</textarea>
-          </label>
-        </div>
-      </div>
+    const metricType = document.getElementById('metricType');
+    const dynamicFields = document.getElementById('dynamicFields');
 
-      <div class="drawer-section" data-mode="import">
-        <div class="drawer-grid">
-          <label class="field">
-            <span>导入文件</span>
-            <input type="text" value="请选择 Excel / CSV 文件" />
-          </label>
-          <label class="field">
-            <span>导入类型</span>
-            <select>
-              <option>物资数据</option>
-              <option>领用数据</option>
-              <option>专项台账</option>
-            </select>
-          </label>
-          <label class="field">
-            <span>校验规则</span>
-            <textarea rows="3">校验必填字段、编号唯一性和部门匹配关系。</textarea>
-          </label>
-        </div>
-      </div>
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => toast.classList.remove('show'), 1800);
+    }
 
-      <div class="drawer-section" data-mode="edit">
-        <div class="drawer-grid">
-          <label class="field">
-            <span>部门/站区</span>
-            <input type="text" value="变电检修中心" />
-          </label>
-          <label class="field">
-            <span>班组/车站</span>
-            <input type="text" value="高压试验班" />
-          </label>
-          <label class="field">
-            <span>编号</span>
-            <input type="text" value="TS-35KV-000128" />
-          </label>
-          <label class="field">
-            <span>物品名称</span>
-            <input type="text" value="绝缘手套" />
-          </label>
-          <label class="field">
-            <span>存放地点</span>
-            <input type="text" value="高压库房" />
-          </label>
-          <label class="field">
-            <span>负责人</span>
-            <input type="text" value="王海峰" />
-          </label>
-          <label class="field">
-            <span>检查周期</span>
-            <input type="text" value="6个月" />
-          </label>
-          <label class="field">
-            <span>检查时间</span>
-            <input type="date" value="2026-04-01" />
-          </label>
-          <label class="field">
-            <span>备注</span>
-            <textarea rows="3">支持新增和编辑特殊劳动防护用品台账记录。</textarea>
-          </label>
-        </div>
-      </div>
+    function switchTab(name) {
+      document.querySelectorAll('.nav-btn').forEach((b) => b.classList.toggle('active', b.dataset.target === name));
+      document.querySelectorAll('.section').forEach((s) => s.classList.remove('active'));
+      document.getElementById(`sec-${name}`).classList.add('active');
+      document.querySelector('.content').scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
-      <div class="drawer-section" data-mode="delete">
-        <div class="drawer-grid">
-          <label class="field">
-            <span>删除对象</span>
-            <input type="text" value="TS-35KV-000097 / 绝缘毯" />
-          </label>
-          <label class="field">
-            <span>删除原因</span>
-            <select>
-              <option>记录错误</option>
-              <option>重复导入</option>
-              <option>人工清理</option>
-            </select>
-          </label>
-          <label class="field">
-            <span>确认说明</span>
-            <textarea rows="3">删除后将同步更新台账和统计结果。</textarea>
-          </label>
-          <label class="checkbox-line">
-            <input type="checkbox" />
-            <span>我已确认删除操作不可撤回</span>
-          </label>
-        </div>
-      </div>
+    function renderFields() {
+      const t = metricType.value;
+      const fieldMap = {
+        headache: '<div class="row"><label>程度（1-10）</label><input id="valueA" type="number" min="1" max="10" required></div><div class="row"><label>持续时长（分钟）</label><input id="valueB" type="number" min="1" max="600" required></div>',
+        blood_pressure: '<div class="row"><label>收缩压 mmHg</label><input id="valueA" type="number" min="60" max="260" required></div><div class="row"><label>舒张压 mmHg</label><input id="valueB" type="number" min="40" max="160" required></div>',
+        blood_glucose: '<div class="row"><label>血糖 mmol/L</label><input id="valueA" type="number" min="2" max="35" step="0.1" required></div>',
+        weight: '<div class="row"><label>体重 kg</label><input id="valueA" type="number" min="20" max="250" step="0.1" required></div>',
+        heart_rate: '<div class="row"><label>心率 bpm</label><input id="valueA" type="number" min="30" max="220" required></div>'
+      };
+      dynamicFields.innerHTML = fieldMap[t];
+    }
 
-      <div class="drawer-section" data-mode="assign">
-        <div class="drawer-grid">
-          <label class="field">
-            <span>分配时间</span>
-            <input type="datetime-local" value="2026-04-21T09:10" />
-          </label>
-          <label class="field">
-            <span>分配方式</span>
-            <select>
-              <option>分配部门</option>
-              <option>分配公用</option>
-              <option>分配个人</option>
-              <option>分配外部人员</option>
-            </select>
-          </label>
-          <label class="field">
-            <span>分配部门 / 对象</span>
-            <input type="text" value="自动化中心 / 输电二班" />
-          </label>
-          <label class="field">
-            <span>物资名称</span>
-            <input type="text" value="安全帽" />
-          </label>
-          <label class="field">
-            <span>分配数量</span>
-            <input type="number" value="1" />
-          </label>
-          <label class="field">
-            <span>虚拟账户 / 人员</span>
-            <input type="text" value="外部人员虚拟账户" />
-          </label>
-          <label class="field">
-            <span>备注</span>
-            <textarea rows="3">外部人员物资统一分配至虚拟人员账户，默认标记为已领用。</textarea>
-          </label>
-          <label class="checkbox-line">
-            <input type="checkbox" checked />
-            <span>分配后默认标记为已领用</span>
-          </label>
-        </div>
-      </div>
+    function riskTag(item) {
+      if (item.type === 'blood_pressure') {
+        if (item.valueA >= 140 || item.valueB >= 90) return 'danger';
+        if (item.valueA >= 130 || item.valueB >= 85) return 'warn';
+      }
+      if (item.type === 'blood_glucose') {
+        if (item.valueA >= 11.1) return 'danger';
+        if (item.valueA >= 7.8) return 'warn';
+      }
+      if (item.type === 'heart_rate') {
+        if (item.valueA >= 120 || item.valueA < 45) return 'danger';
+        if (item.valueA >= 100) return 'warn';
+      }
+      return 'ok';
+    }
 
-      <div class="drawer-section" data-mode="scrap">
-        <div class="drawer-grid">
-          <label class="field">
-            <span>报废时间</span>
-            <input type="datetime-local" value="2026-04-21T11:00" />
-          </label>
-          <label class="field">
-            <span>报废数量</span>
-            <input type="number" value="1" />
-          </label>
-          <label class="field">
-            <span>报废原因</span>
-            <select>
-              <option>送检不合格</option>
-              <option>磨损严重</option>
-              <option>达到寿命</option>
-            </select>
-          </label>
-          <label class="field">
-            <span>备注</span>
-            <textarea rows="3">可选择指定报废时间，完成后回写报废台账。</textarea>
-          </label>
-        </div>
-      </div>
+    function formatValue(item) {
+      if (item.type === 'blood_pressure') return `${item.valueA}/${item.valueB} mmHg`;
+      if (item.type === 'headache') return `程度${item.valueA}，${item.valueB}分钟`;
+      if (item.type === 'blood_glucose') return `${item.valueA} mmol/L`;
+      if (item.type === 'weight') return `${item.valueA} kg`;
+      if (item.type === 'heart_rate') return `${item.valueA} bpm`;
+      return '-';
+    }
 
-      <div class="drawer-section" data-mode="undo-scrap">
-        <div class="drawer-grid">
-          <label class="field">
-            <span>撤消报废对象</span>
-            <input type="text" value="安全带 / 编码 BF-AQD-0189" />
-          </label>
-          <label class="field">
-            <span>撤消原因</span>
-            <select>
-              <option>误报废</option>
-              <option>检测结果修正</option>
-              <option>审批回退</option>
-            </select>
-          </label>
-          <label class="field">
-            <span>备注</span>
-            <textarea rows="3">撤消后恢复库存并同步公用物资台账。</textarea>
-          </label>
-        </div>
-      </div>
+    function render() {
+      const keys = Object.keys(metricLabels);
+      document.getElementById('metricCards').innerHTML = keys.map((k) => {
+        const rec = records.find((r) => r.type === k);
+        return `<div class="metric-card"><b>${metricLabels[k]}</b><strong>${rec ? formatValue(rec) : '暂无'}</strong></div>`;
+      }).join('');
 
-      <div class="drawer-section" data-mode="return">
-        <div class="drawer-grid">
-          <label class="field">
-            <span>借用人</span>
-            <input type="text" value="王海峰" />
-          </label>
-          <label class="field">
-            <span>归还时间</span>
-            <input type="datetime-local" value="2026-04-25T17:30" />
-          </label>
-          <label class="field">
-            <span>归还状态</span>
-            <select>
-              <option>已归还</option>
-              <option>归还中</option>
-              <option>逾期未还</option>
-            </select>
-          </label>
-          <label class="field">
-            <span>备注</span>
-            <textarea rows="3">归还后自动更新台账和借用状态。</textarea>
-          </label>
-        </div>
-      </div>
+      document.getElementById('recordList').innerHTML = records.slice(0, 12).map((r) => {
+        const tag = riskTag(r);
+        const tagText = tag === 'danger' ? '异常' : tag === 'warn' ? '关注' : '正常';
+        return `<li><b>${metricLabels[r.type]}</b>：${formatValue(r)} <span class="tag ${tag}">${tagText}</span><br><small>${new Date(r.time).toLocaleString()}${r.note ? ` · ${r.note}` : ''}</small></li>`;
+      }).join('') || '<li>暂无记录</li>';
 
-      <div class="drawer-section" data-mode="export-zip">
-        <div class="drawer-grid">
-          <label class="field">
-            <span>导出年份</span>
-            <select>
-              <option>2026</option>
-              <option>2025</option>
-            </select>
-          </label>
-          <label class="field">
-            <span>人员范围</span>
-            <input type="text" value="全员 / 指定中心 / 指定人员" />
-          </label>
-          <label class="field">
-            <span>导出格式</span>
-            <input type="text" value="ZIP 压缩包" />
-          </label>
-          <label class="field">
-            <span>说明</span>
-            <textarea rows="3">可按人为单位按年导出，生成 ZIP 压缩包。</textarea>
-          </label>
-        </div>
-      </div>
+      document.getElementById('trendList').innerHTML = records.slice(0, 7).map((r) => `<li>${metricLabels[r.type]}：${formatValue(r)}（${new Date(r.time).toLocaleDateString()}）</li>`).join('') || '<li>暂无趋势数据</li>';
+    }
 
-      <div class="drawer-section" data-mode="check">
-        <div class="drawer-grid">
-          <label class="field">
-            <span>编号 / 物品名称</span>
-            <input type="text" value="TS-35KV-000128 / 绝缘手套" />
-          </label>
-          <label class="field">
-            <span>上次送检日期</span>
-            <input type="date" value="2025-11-06" />
-          </label>
-          <label class="field">
-            <span>下次检测日期</span>
-            <input type="date" value="2026-05-06" />
-          </label>
-          <label class="field">
-            <span>提前提醒</span>
-            <input type="text" value="15 天" />
-          </label>
-          <label class="field">
-            <span>备注</span>
-            <textarea rows="3">依据上次送检日期推算下次检测时间，并自动提醒待检查数据。</textarea>
-          </label>
-        </div>
-      </div>
+    document.getElementById('recordForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const valueA = Number(document.getElementById('valueA')?.value);
+      const valueB = Number(document.getElementById('valueB')?.value || 0);
+      const note = document.getElementById('note').value.trim();
+      records.unshift({ type: metricType.value, valueA, valueB, note, time: Date.now() });
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+      render();
+      showToast('保存成功');
+      switchTab('home');
+    });
 
-      <div class="drawer-section" data-mode="receive">
-        <div class="drawer-grid">
-          <label class="field">
-            <span>领用人</span>
-            <input type="text" value="当前用户" />
-          </label>
-          <label class="field">
-            <span>领取时间</span>
-            <input type="datetime-local" value="2026-04-21T09:20" />
-          </label>
-          <label class="field">
-            <span>领用状态</span>
-            <select>
-              <option>待领取</option>
-              <option>已领取</option>
-              <option>已确认</option>
-            </select>
-          </label>
-          <label class="field">
-            <span>手写签字</span>
-            <div class="signature-box">点击此处模拟手写签字确认</div>
-          </label>
-        </div>
-      </div>
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      document.getElementById('recordForm').reset();
+      metricType.value = 'headache';
+      renderFields();
+    });
 
-      <div class="drawer-section" data-mode="replace">
-        <div class="drawer-grid">
-          <label class="field">
-            <span>更换用品</span>
-            <input type="text" value="绝缘手套" />
-          </label>
-          <label class="field">
-            <span>更换原因</span>
-            <select>
-              <option>损坏</option>
-              <option>到期</option>
-              <option>标准更新</option>
-            </select>
-          </label>
-          <label class="field">
-            <span>申请说明</span>
-            <textarea rows="3">由员工端发起，进入审批工作流。</textarea>
-          </label>
-        </div>
-      </div>
-    </div>
+    document.getElementById('gotoRecord').addEventListener('click', () => switchTab('record'));
+    document.getElementById('exportBtn').addEventListener('click', () => {
+      const blob = new Blob([JSON.stringify(records, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'health-records-demo.json';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    });
 
-    <div class="drawer-footer">
-      <button class="btn btn-light" id="drawerCancel">取消</button>
-      <button class="btn btn-primary" id="drawerConfirm">确认提交</button>
-    </div>
-  </aside>
+    metricType.addEventListener('change', renderFields);
+    document.querySelectorAll('.nav-btn').forEach((btn) => btn.addEventListener('click', () => switchTab(btn.dataset.target)));
 
-  <div class="toast" id="toast">原型已更新。</div>
-  <script src="./script.js"></script>
+    document.getElementById('todayDate').textContent = new Date().toLocaleDateString('zh-CN');
+    renderFields();
+    render();
+  </script>
 </body>
 </html>
